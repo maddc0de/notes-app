@@ -21,7 +21,9 @@ describe("web page test", () => {
     const view = new NotesView(model);
     view.displayNotes();
 
-    expect(document.querySelector(".note").innerText).toEqual("this is a note");
+    expect(document.querySelector(".note").textContent).toEqual(
+      "this is a note"
+    );
     expect(document.querySelectorAll(".note").length).toBe(1);
   });
 
@@ -35,6 +37,20 @@ describe("web page test", () => {
     const buttonEl = document.querySelector("#note-button");
     buttonEl.click();
 
-    expect(document.querySelector(".note").innerText).toEqual("Have breakfast");
+    expect(document.querySelector("div.note").textContent).toEqual(
+      "Have breakfast"
+    );
+  });
+
+  it("display the correct number of notes added", () => {
+    const model = new NotesModel();
+    const view = new NotesView(model);
+    model.addNote("one");
+    model.addNote("two");
+
+    view.displayNotes();
+    view.displayNotes();
+
+    expect(document.querySelectorAll("div.note").length).toEqual(2);
   });
 });
