@@ -4,6 +4,7 @@
 
 const fs = require("fs");
 const NotesView = require("./notesView");
+const NotesModel = require("./notesModel");
 
 describe("web page test", () => {
   beforeEach(() => {
@@ -11,16 +12,29 @@ describe("web page test", () => {
   });
 
   it("displays the notes", () => {
-    const fakeModel = {
-      getNotes: () => ["this is a note"],
-    };
-    // const model = new NotesModel();
-    // model.addNote("this is a note");
+    // const doubleModel = {
+    //   getNotes: () => ["this is a note"],
+    // };
+    const model = new NotesModel();
+    model.addNote("this is a note");
 
-    const view = new NotesView(fakeModel);
+    const view = new NotesView(model);
     view.displayNotes();
 
-    expect(document.querySelector("div").innerText).toEqual("this is a note");
-    expect(document.querySelectorAll("div").length).toBe(1);
+    expect(document.querySelector(".note").innerText).toEqual("this is a note");
+    expect(document.querySelectorAll(".note").length).toBe(1);
+  });
+
+  it("adds a new note", () => {
+    const model = new NotesModel();
+    const view = new NotesView(model);
+
+    const inputEl = document.querySelector("#note-input");
+    inputEl.value = "Have breakfast";
+
+    const buttonEl = document.querySelector("#note-button");
+    buttonEl.click();
+
+    expect(document.querySelector(".note").innerText).toEqual("Have breakfast");
   });
 });
