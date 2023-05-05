@@ -14,11 +14,11 @@ describe("web page test", () => {
   it("displays notes returned from adding note in the model class", () => {
     const mockNotesModel = {
       notes: [],
-      addNote: (note) => mockModel.notes.push(note),
-      getNotes: () => mockModel.notes,
+      addNote: (note) => mockNotesModel.notes.push(note),
+      getNotes: () => mockNotesModel.notes,
     };
 
-    mockModel.addNote("this is a note");
+    mockNotesModel.addNote("this is a note");
 
     const view = new NotesView(mockNotesModel);
     view.displayNotes();
@@ -29,12 +29,19 @@ describe("web page test", () => {
     expect(document.querySelectorAll(".note").length).toBe(1);
   });
 
-  xit("adds a new note", () => {
-    const model = new NotesModel();
-    const view = new NotesView(model);
+  it("adds a new note from user input", () => {
+    const mockNotesModel = {
+      notes: [],
+      addNote: (note) => mockNotesModel.notes.push(note),
+      getNotes: () => mockNotesModel.notes,
+    };
+
+    const view = new NotesView(mockNotesModel);
 
     const inputEl = document.querySelector("#note-input");
     inputEl.value = "Have breakfast";
+
+    view.addUserInputNote(inputEl.value);
 
     const buttonEl = document.querySelector("#note-button");
     buttonEl.click();
@@ -44,11 +51,17 @@ describe("web page test", () => {
     );
   });
 
-  xit("displays the correct number of notes added", () => {
-    const model = new NotesModel();
-    const view = new NotesView(model);
-    model.addNote("one");
-    model.addNote("two");
+  it("displays the correct number of notes added", () => {
+    const mockNotesModel = {
+      notes: [],
+      addNote: (note) => mockNotesModel.notes.push(note),
+      getNotes: () => mockNotesModel.notes,
+    };
+
+    mockNotesModel.addNote("one");
+    mockNotesModel.addNote("two");
+
+    const view = new NotesView(mockNotesModel);
 
     view.displayNotes();
     view.displayNotes();
@@ -57,7 +70,11 @@ describe("web page test", () => {
   });
 
   xit("displays notes returned from an Api call", () => {
-    const model = new NotesModel();
+    const mockNotesModel = {
+      notes: [],
+      addNote: (note) => mockNotesModel.notes.push(note),
+      getNotes: () => mockNotesModel.notes,
+    };
 
     const mockClient = {
       loadNotes: () => ["test note"],

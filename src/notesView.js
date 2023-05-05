@@ -6,8 +6,8 @@ class NotesView {
 
     this.buttonEl = document.querySelector("#note-button");
     this.buttonEl.addEventListener("click", () => {
-      this.postNote();
-      this.displayNotes();
+      const newNote = document.querySelector("#note-input").value;
+      this.addUserInputNote(newNote);
     });
   }
 
@@ -27,11 +27,12 @@ class NotesView {
     });
   }
 
-  postNote() {
-    const inputEl = document.querySelector("#note-input");
-    this.model.addNote(inputEl.value);
+  addUserInputNote(newNote) {
+    this.model.addNote(newNote);
     // clear input value
-    inputEl.value = "";
+    document.querySelector("#note-input").value = "";
+
+    this.displayNotes();
   }
 
   getApiNote() {
