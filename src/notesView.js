@@ -3,7 +3,6 @@ class NotesView {
     this.model = model;
     this.mainContainerEL = document.querySelector("#main-container");
     this.buttonEl = document.querySelector("#note-button");
-
     this.buttonEl.addEventListener("click", () => {
       this.postNote();
       this.displayNotes();
