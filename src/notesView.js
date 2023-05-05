@@ -1,7 +1,9 @@
 class NotesView {
-  constructor(model) {
+  constructor(model, client) {
     this.model = model;
+    this.client = client;
     this.mainContainerEL = document.querySelector("#main-container");
+
     this.buttonEl = document.querySelector("#note-button");
     this.buttonEl.addEventListener("click", () => {
       this.postNote();
@@ -30,6 +32,11 @@ class NotesView {
     this.model.addNote(inputEl.value);
     // clear input value
     inputEl.value = "";
+  }
+
+  getApiNote() {
+    // calls loadNotes from Client here?
+    // gets the data, then add it in setNotes in Model class
   }
 }
 
