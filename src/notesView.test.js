@@ -7,88 +7,84 @@ const NotesView = require("./notesView");
 // const NotesModel = require("./notesModel");
 
 describe("web page test", () => {
+  let mockNotesModel;
+
   beforeEach(() => {
     document.body.innerHTML = fs.readFileSync("./index.html");
-  });
 
-  it("displays notes returned from adding note in the model class", () => {
-    const mockNotesModel = {
+    mockNotesModel = {
       notes: [],
       addNote: (note) => mockNotesModel.notes.push(note),
       getNotes: () => mockNotesModel.notes,
     };
-
-    mockNotesModel.addNote("this is a note");
-
-    const view = new NotesView(mockNotesModel);
-    view.displayNotes();
-
-    expect(document.querySelector(".note").textContent).toEqual(
-      "this is a note"
-    );
-    expect(document.querySelectorAll(".note").length).toBe(1);
   });
 
-  it("adds a new note from user input", () => {
-    const mockNotesModel = {
-      notes: [],
-      addNote: (note) => mockNotesModel.notes.push(note),
-      getNotes: () => mockNotesModel.notes,
-    };
+  describe(".displayNotes method", () => {
+    it("displays notes returned from adding note in the model class", () => {
+      mockNotesModel.addNote("this is a note");
 
-    const view = new NotesView(mockNotesModel);
+      const view = new NotesView(mockNotesModel);
+      view.displayNotes();
 
-    const inputEl = document.querySelector("#note-input");
-    inputEl.value = "Have breakfast";
+      expect(document.querySelector(".note").textContent).toEqual(
+        "this is a note"
+      );
+      expect(document.querySelectorAll(".note").length).toBe(1);
+    });
 
-    view.addUserInputNote(inputEl.value);
+    it("displays the correct number of notes added", () => {
+      mockNotesModel.addNote("one");
+      mockNotesModel.addNote("two");
 
-    const buttonEl = document.querySelector("#note-button");
-    buttonEl.click();
+      const view = new NotesView(mockNotesModel);
 
-    expect(document.querySelector("div.note").textContent).toEqual(
-      "Have breakfast"
-    );
+      view.displayNotes();
+      view.displayNotes();
+
+      expect(document.querySelectorAll("div.note").length).toEqual(2);
+    });
   });
 
-  it("displays the correct number of notes added", () => {
-    const mockNotesModel = {
-      notes: [],
-      addNote: (note) => mockNotesModel.notes.push(note),
-      getNotes: () => mockNotesModel.notes,
-    };
+  describe(".addUserInputNote method", () => {
+    it("adds a new note from user input and displays it in the webpage", () => {
+      const view = new NotesView(mockNotesModel);
 
-    mockNotesModel.addNote("one");
-    mockNotesModel.addNote("two");
+      const inputEl = document.querySelector("#note-input");
+      inputEl.value = "Have breakfast";
 
-    const view = new NotesView(mockNotesModel);
+      view.addUserInputNote(inputEl.value);
 
-    view.displayNotes();
-    view.displayNotes();
+      const buttonEl = document.querySelector("#note-button");
+      buttonEl.click();
 
-    expect(document.querySelectorAll("div.note").length).toEqual(2);
+      expect(document.querySelector("div.note").textContent).toEqual(
+        "Have breakfast"
+      );
+    });
   });
 
-  it("displays notes returned from an Api call", () => {
-    const mockNotesModel = {
-      notes: [],
-      getNotes: () => mockNotesModel.notes,
-      setNotes: (notes) => {
-        mockNotesModel.notes = notes;
-      },
-    };
+  describe(".displayNotesFromApi method", () => {
+    it("displays notes returned from an Api call", () => {
+      const mockModel = {
+        notes: [],
+        getNotes: () => mockNotesModel.notes,
+        setNotes: (notes) => {
+          mockNotesModel.notes = notes;
+        },
+      };
 
-    const mockNotesClient = {
-      loadNotes: (callback) => callback(["api test note"]),
-    };
+      const mockNotesClient = {
+        loadNotes: (callback) => callback(["api test note"]),
+      };
 
-    const view = new NotesView(mockNotesModel, mockNotesClient);
+      const view = new NotesView(mockModel, mockNotesClient);
 
-    view.displayNotesFromApi();
+      view.displayNotesFromApi();
 
-    expect(document.querySelectorAll(".note").length).toEqual(1);
-    expect(document.querySelector(".note").textContent).toEqual(
-      "api test note"
-    );
+      expect(document.querySelectorAll(".note").length).toEqual(1);
+      expect(document.querySelector(".note").textContent).toEqual(
+        "api test note"
+      );
+    });
   });
 });
