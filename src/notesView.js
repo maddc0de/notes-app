@@ -29,15 +29,16 @@ class NotesView {
 
   addUserInputNote(newNote) {
     this.model.addNote(newNote);
-    // clear input value
-    document.querySelector("#note-input").value = "";
+    document.querySelector("#note-input").value = ""; // clear input value
 
     this.displayNotes();
   }
 
-  getApiNote() {
-    // calls loadNotes from Client here?
-    // gets the data, then add it in setNotes in Model class
+  displayNotesFromApi() {
+    this.client.loadNotes((notesData) => {
+      this.model.setNotes(notesData);
+      this.displayNotes();
+    });
   }
 }
 

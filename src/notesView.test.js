@@ -69,28 +69,26 @@ describe("web page test", () => {
     expect(document.querySelectorAll("div.note").length).toEqual(2);
   });
 
-  xit("displays notes returned from an Api call", () => {
+  it("displays notes returned from an Api call", () => {
     const mockNotesModel = {
       notes: [],
-      addNote: (note) => mockNotesModel.notes.push(note),
       getNotes: () => mockNotesModel.notes,
+      setNotes: (notes) => {
+        mockNotesModel.notes = notes;
+      },
     };
 
-    const mockClient = {
-      loadNotes: () => ["test note"],
+    const mockNotesClient = {
+      loadNotes: (callback) => callback(["api test note"]),
     };
 
-    const view = new NotesView(model, mockClient);
+    const view = new NotesView(mockNotesModel, mockNotesClient);
 
-    view.getApiNote(); //loads the api data and dis
+    view.displayNotesFromApi();
 
-    expect(document.querySelectorAll("div.note").length).toEqual(2);
+    expect(document.querySelectorAll(".note").length).toEqual(1);
+    expect(document.querySelector(".note").textContent).toEqual(
+      "api test note"
+    );
   });
 });
-
-// test drive method displayNotesFromApi() on the NotesView class
-// the method should:
-// call loadNotes(callback) on the Client class
-// when the response data is received,
-// set the list of notes on the model and call displayNotes():
-// mock the NotesClient
