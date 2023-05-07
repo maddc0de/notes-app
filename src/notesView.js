@@ -6,8 +6,8 @@ class NotesView {
 
     this.buttonEl = document.querySelector("#note-button");
     this.buttonEl.addEventListener("click", () => {
-      const newNote = document.querySelector("#note-input").value;
-      this.addUserInputNote(newNote);
+      const newNoteData = document.querySelector("#note-input").value;
+      this.addUserInputNote(newNoteData);
     });
   }
 
@@ -27,14 +27,26 @@ class NotesView {
     });
   }
 
-  addUserInputNote(newNote) {
-    this.model.addNote(newNote);
+  // addUserInputNote(newNote) {
+  //   this.model.addNote(newNote);
+  //   document.querySelector("#note-input").value = ""; // clear input value
+
+  //   this.displayNotes();
+  // }
+
+  // updating addUserInput Note
+  async addUserInputNote(newNoteData) {
+    await this.client.createNote({ content: newNoteData });
     document.querySelector("#note-input").value = ""; // clear input value
 
-    this.displayNotes();
+    await this.displayNotesFromApi(); //new note is showing but reprinting all the notes
   }
 
   displayNotesFromApi() {
+    // document.querySelectorAll(".note").forEach((element) => {
+    //   element.remove();
+    // });
+
     this.client.loadNotes((notesData) => {
       this.model.setNotes(notesData);
       this.displayNotes();
@@ -43,3 +55,16 @@ class NotesView {
 }
 
 module.exports = NotesView;
+
+// We now want to update the NotesView class so that the
+// method client.createNote is called when the user submits
+//the form — test-drive this feature.
+//Remember, here again, to mock the dependency on
+//NotesClient in this test.
+
+// addNewNote(newNote) {
+//   this.client.createNote({ content: newNote });
+//   this.model.addNote(newNote);
+//   this.clearInputField();
+//   this.displayNotes();
+// }

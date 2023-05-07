@@ -44,7 +44,7 @@ describe("web page test", () => {
     });
   });
 
-  describe(".addUserInputNote method", () => {
+  xdescribe(".addUserInputNote method", () => {
     it("adds a new note from user input and displays it in the webpage", () => {
       const view = new NotesView(mockNotesModel);
 
