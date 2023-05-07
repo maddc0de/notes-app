@@ -22,4 +22,14 @@ describe("NotesClient class", () => {
       done();
     });
   });
+
+  it("calls fetch to send a POST request to create a new note", async () => {
+    const client = new NotesClient();
+
+    fetch.mockResponseOnce(JSON.stringify({ content: "Creating a new note!" }));
+
+    await client.createNote((newNoteData) => {
+      expect(fetchMock.mock.calls.length).toEqual(1);
+    });
+  });
 });

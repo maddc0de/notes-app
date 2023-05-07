@@ -4,7 +4,6 @@
 
 const fs = require("fs");
 const NotesView = require("./notesView");
-// const NotesModel = require("./notesModel");
 
 describe("web page test", () => {
   let mockNotesModel;
