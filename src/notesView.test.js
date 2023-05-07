@@ -5,6 +5,8 @@
 const fs = require("fs");
 const NotesView = require("./notesView");
 
+jest.mock("./notesClient.js");
+
 describe("web page test", () => {
   let mockNotesModel;
 
@@ -44,18 +46,24 @@ describe("web page test", () => {
     });
   });
 
-  xdescribe(".addUserInputNote method", () => {
-    it("adds a new note from user input and displays it in the webpage", () => {
-      const view = new NotesView(mockNotesModel);
+  describe(".addUserInputNote method", () => {
+    it("adds a new note in the backend from user input and displays it in the webpage", async () => {
+      const mockNotesClient = {
+        createNote: jest.fn().mockImplementation((newNoteData) => {
+          console.log("createNote called with data:", newNoteData);
+          return Promise.resolve({ content: newNoteData });
+        }),
+      };
+
+      const view = new NotesView(mockNotesModel, mockNotesClient);
 
       const inputEl = document.querySelector("#note-input");
       inputEl.value = "Have breakfast";
 
-      view.addUserInputNote(inputEl.value);
-
       const buttonEl = document.querySelector("#note-button");
       buttonEl.click();
 
+      expect(mockNotesClient.createNote).toHaveBeenCalledTimes(1);
       expect(document.querySelector("div.note").textContent).toEqual(
         "Have breakfast"
       );

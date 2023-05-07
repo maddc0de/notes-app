@@ -17,9 +17,7 @@ class NotesModel {
 
   // notes coming from an API
   setNotes(notes) {
-    notes.forEach((note) => {
-      this.notes.push(note);
-    });
+    this.notes = notes;
   }
 }
 

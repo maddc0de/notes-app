@@ -11,11 +11,15 @@ class NotesView {
     });
   }
 
-  displayNotes() {
-    // 1. Remove all previous notes
+  clearNotes() {
     document.querySelectorAll(".note").forEach((element) => {
       element.remove();
     });
+  }
+
+  displayNotes() {
+    // 1. Remove all previous notes
+    this.clearNotes();
 
     const notes = this.model.getNotes();
     // 2. for each note, create and append a new element in the main container
@@ -27,26 +31,15 @@ class NotesView {
     });
   }
 
-  // addUserInputNote(newNote) {
-  //   this.model.addNote(newNote);
-  //   document.querySelector("#note-input").value = ""; // clear input value
-
-  //   this.displayNotes();
-  // }
-
-  // updating addUserInput Note
-  async addUserInputNote(newNoteData) {
-    await this.client.createNote({ content: newNoteData });
+  addUserInputNote(newNoteData) {
+    this.client.createNote({ content: newNoteData });
+    this.model.addNote(newNoteData); // need to add it here too so it shows up in the page right after clicking 'add note'
     document.querySelector("#note-input").value = ""; // clear input value
 
-    await this.displayNotesFromApi(); //new note is showing but reprinting all the notes
+    this.displayNotes();
   }
 
   displayNotesFromApi() {
-    // document.querySelectorAll(".note").forEach((element) => {
-    //   element.remove();
-    // });
-
     this.client.loadNotes((notesData) => {
       this.model.setNotes(notesData);
       this.displayNotes();
@@ -61,10 +54,3 @@ module.exports = NotesView;
 //the form — test-drive this feature.
 //Remember, here again, to mock the dependency on
 //NotesClient in this test.
-
-// addNewNote(newNote) {
-//   this.client.createNote({ content: newNote });
-//   this.model.addNote(newNote);
-//   this.clearInputField();
-//   this.displayNotes();
-// }
